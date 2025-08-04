@@ -1,0 +1,93 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow Model Setup 'inst19|altpll_component|pll|clk[0]'
+Slack : -9.484
+TNS   : -105.986
+
+Type  : Slow Model Setup 'reloj:inst4|enable_60hz'
+Slack : -4.979
+TNS   : -180.287
+
+Type  : Slow Model Hold 'inst19|altpll_component|pll|clk[0]'
+Slack : 0.391
+TNS   : 0.000
+
+Type  : Slow Model Hold 'reloj:inst4|enable_60hz'
+Slack : 0.391
+TNS   : 0.000
+
+Type  : Slow Model Recovery 'inst19|altpll_component|pll|clk[0]'
+Slack : -4.657
+TNS   : -47.937
+
+Type  : Slow Model Recovery 'reloj:inst4|enable_60hz'
+Slack : -0.990
+TNS   : -13.490
+
+Type  : Slow Model Removal 'reloj:inst4|enable_60hz'
+Slack : 1.307
+TNS   : 0.000
+
+Type  : Slow Model Removal 'inst19|altpll_component|pll|clk[0]'
+Slack : 4.649
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'reloj:inst4|enable_60hz'
+Slack : -0.500
+TNS   : -57.000
+
+Type  : Slow Model Minimum Pulse Width 'clk_in'
+Slack : 10.000
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'inst19|altpll_component|pll|clk[0]'
+Slack : 18.077
+TNS   : 0.000
+
+Type  : Fast Model Setup 'inst19|altpll_component|pll|clk[0]'
+Slack : -4.109
+TNS   : -45.650
+
+Type  : Fast Model Setup 'reloj:inst4|enable_60hz'
+Slack : -1.700
+TNS   : -49.082
+
+Type  : Fast Model Hold 'inst19|altpll_component|pll|clk[0]'
+Slack : 0.215
+TNS   : 0.000
+
+Type  : Fast Model Hold 'reloj:inst4|enable_60hz'
+Slack : 0.215
+TNS   : 0.000
+
+Type  : Fast Model Recovery 'inst19|altpll_component|pll|clk[0]'
+Slack : -2.158
+TNS   : -22.228
+
+Type  : Fast Model Recovery 'reloj:inst4|enable_60hz'
+Slack : -0.023
+TNS   : -0.023
+
+Type  : Fast Model Removal 'reloj:inst4|enable_60hz'
+Slack : 0.728
+TNS   : 0.000
+
+Type  : Fast Model Removal 'inst19|altpll_component|pll|clk[0]'
+Slack : 2.675
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'reloj:inst4|enable_60hz'
+Slack : -0.500
+TNS   : -57.000
+
+Type  : Fast Model Minimum Pulse Width 'clk_in'
+Slack : 10.000
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'inst19|altpll_component|pll|clk[0]'
+Slack : 18.077
+TNS   : 0.000
+
+------------------------------------------------------------

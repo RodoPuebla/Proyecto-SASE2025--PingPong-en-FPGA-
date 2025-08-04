@@ -1,0 +1,225 @@
+	library ieee;
+	use ieee.std_logic_1164.all;
+	use ieee.numeric_std.all;
+
+	entity Mapear is
+
+		port(
+			Corazon		: in std_logic_vector(29 downto 0);
+			Corazon_N	: in std_logic_vector(29 downto 0);
+			Trofeo		: in std_logic_vector(29 downto 0);
+			Winner		: in std_logic_vector(29 downto 0);
+			Loser			: in std_logic_vector(29 downto 0);
+			Calavera		: in std_logic_vector(29 downto 0);
+			cntH			: in integer range 0 to 800;
+			cntV			: in integer range 0 to 525;
+
+			p_ejex, p_ejey   : in  integer range 0 to 800;
+			b1_ejey, b2_ejey : in  integer range 0 to 500;
+			vidas_p1, vidas_p2 : in integer range 0 to 3;
+
+			RojoM			: out	std_logic_vector(9 downto 0);
+			VerdeM		: out	std_logic_vector(9 downto 0);
+			AzulM			: out	std_logic_vector(9 downto 0);
+			
+			min			: in integer range 0 to 9;
+			seg_u			: in integer range 0 to 9;
+			seg_d			: in integer range 0 to 9
+			
+
+		);
+
+	end entity;
+
+	architecture rtl of Mapear is
+	
+		constant b1_ejex : integer := 272;
+		constant b2_ejex : integer := 640;
+		
+		function graficar_digito(digito : integer; H, V : integer; baseX, baseY : integer) return boolean is -- funcion para graficar digitos
+			constant x : integer := H - baseX;
+			constant y : integer := V - baseY;
+			variable segs : std_logic_vector(6 downto 0);
+			begin
+				case digito is
+					when 0 => segs := "1111110";
+					when 1 => segs := "0110000";
+					when 2 => segs := "1101101";
+					when 3 => segs := "1111001";
+					when 4 => segs := "0110011";
+					when 5 => segs := "1011011";
+					when 6 => segs := "1011111";
+					when 7 => segs := "1110000";
+					when 8 => segs := "1111111";
+					when 9 => segs := "1111011";
+					when others => segs := (others => '0');
+				end case;
+					if segs(6) = '1' and y >= 0  and y <= 3  and x >= 1  and x <= 14 then return true; end if; -- a (horizontal)
+					if segs(5) = '1' and x >= 12 and x <= 15 and y >= 2  and y <= 9  then return true; end if; -- b (vertical)
+					if segs(4) = '1' and x >= 12 and x <= 15 and y >= 14 and y <= 21 then return true; end if; -- c (vertical)
+					if segs(3) = '1' and y >= 20 and y <= 23 and x >= 1  and x <= 14 then return true; end if; -- d (horizontal)
+					if segs(2) = '1' and x >= 0  and x <= 3  and y >= 14 and y <= 21 then return true; end if; -- e (vertical)
+					if segs(1) = '1' and x >= 0  and x <= 3  and y >= 2  and y <= 9  then return true; end if; -- f (vertical)
+					if segs(0) = '1' and y >= 10 and y <= 13 and x >= 1  and x <= 14 then return true; end if; -- g (horizontal)
+				return false;
+		end function;
+		
+	begin
+		process (cntH, cntV, p_ejex, p_ejey, b1_ejey,b2_ejey, Corazon,Corazon_N, vidas_p1,vidas_p2, seg_d, seg_u, min,Trofeo,Winner,Loser,Calavera)
+		begin
+			if ((cntH >= 144) and (cntH < 783)) and ((cntV >= 35) and  (cntV < 515) ) then 							-- ZONA VISIBLE
+				if ((cntH >= p_ejex) and (cntH < p_ejex + 16)) and ((cntV >= p_ejey) and (cntV < p_ejey + 16)) and --dentro del cuadrado, aparentemente me ahorra logica, al hacer el circulo
+					((cntH - (p_ejex + 8)) * (cntH - (p_ejex + 8)) + (cntV - (p_ejey + 8)) * (cntV - (p_ejey + 8)) <= 64) then  -- que sea un circulo, ecuacion de un circulo centrado en (8;8) 
+					RojoM		<=  "1111111100"; --255
+					VerdeM	<=  "1111111100"; --255
+					AzulM		<=  "1011010000"; --180
+				elsif ( (cntV >= 111 and cntV < 115 and cntH >= 268 and cntH < 660) or (cntV >= 435 and cntV < 439 and cntH >= 268 and cntH < 660) or
+						 (cntH >= 268 and cntH < 272 and cntV >= 115 and cntV < 435) or(cntH >= 656 and cntH < 660 and cntV >= 115 and cntV < 435)) then  -- recuadro
+					RojoM		<=  "1101110000"; --220
+					VerdeM	<=  "1101110000"; --220
+					AzulM		<=  "1111111100"; --255
+				elsif ((cntH >= b1_ejex) and (cntH < b1_ejex + 16)) and ((cntV >= b1_ejey) and  (cntV < b1_ejey + 64) ) then  --dentro de la barra 
+					RojoM		<=  "1011010000";	--180
+					VerdeM	<=  "1111111100"; --255
+					AzulM		<=  "1111111100"; --255
+				elsif ((cntH >= b2_ejex) and (cntH < b2_ejex + 16)) and ((cntV >= b2_ejey) and  (cntV < b2_ejey + 64) ) then  --dentro de la barra 
+					RojoM		<=  "1111111100";	--255
+					VerdeM	<=  "0111100000"; --60
+					AzulM		<=  "0111100000"; --60
+				elsif ((cntH >= 56+144) and (cntH < 80+144)) and ((cntV >= 20+35) and  (cntV < 42+35) ) then  --corazon0
+					if vidas_p1 >= 1 then 
+						RojoM		<=  Corazon(29 downto 20);	
+						VerdeM	<=  Corazon(19 downto 10); 
+						AzulM		<=  Corazon(9 downto 0);
+					else
+						RojoM		<=  Corazon_N(29 downto 20);	
+						VerdeM	<=  Corazon_N(19 downto 10); 
+						AzulM		<=  Corazon_N(9 downto 0);
+					end if;
+				elsif ((cntH >= 234) and (cntH < 234+24 )) and ((cntV >= 20+35) and  (cntV < 42+35) ) then  --corazon1
+					if vidas_p1 >= 2 then 
+						RojoM		<=  Corazon(29 downto 20);	
+						VerdeM	<=  Corazon(19 downto 10); 
+						AzulM		<=  Corazon(9 downto 0);
+					else
+						RojoM		<=  Corazon_N(29 downto 20);	
+						VerdeM	<=  Corazon_N(19 downto 10); 
+						AzulM		<=  Corazon_N(9 downto 0);
+					end if; 
+				elsif ((cntH >= 268) and (cntH < 268+24 )) and ((cntV >= 20+35) and  (cntV < 42+35) ) then  --corazon2
+					if vidas_p1 >= 3 then 
+						RojoM		<=  Corazon(29 downto 20);	
+						VerdeM	<=  Corazon(19 downto 10); 
+						AzulM		<=  Corazon(9 downto 0);
+					else
+						RojoM		<=  Corazon_N(29 downto 20);	
+						VerdeM	<=  Corazon_N(19 downto 10); 
+						AzulM		<=  Corazon_N(9 downto 0);
+					end if;
+				elsif ((cntH >= 638) and (cntH < 638+24)) and ((cntV >= 20+35) and  (cntV < 42+35) ) then  --corazon3
+					if vidas_p2 >= 1 then 
+						RojoM		<=  Corazon(29 downto 20);	
+						VerdeM	<=  Corazon(19 downto 10); 
+						AzulM		<=  Corazon(9 downto 0);
+					else
+						RojoM		<=  Corazon_N(29 downto 20);	
+						VerdeM	<=  Corazon_N(19 downto 10); 
+						AzulM		<=  Corazon_N(9 downto 0);
+					end if;
+				elsif ((cntH >= 671) and (cntH < 671+24)) and ((cntV >= 20+35) and  (cntV < 42+35) ) then  --corazon4
+					if vidas_p2 >= 2 then 
+						RojoM		<=  Corazon(29 downto 20);	
+						VerdeM	<=  Corazon(19 downto 10); 
+						AzulM		<=  Corazon(9 downto 0);
+					else
+						RojoM		<=  Corazon_N(29 downto 20);	
+						VerdeM	<=  Corazon_N(19 downto 10); 
+						AzulM		<=  Corazon_N(9 downto 0);
+					end if;
+				elsif ((cntH >= 705) and (cntH < 705+24)) and ((cntV >= 20+35) and  (cntV < 42+35) ) then  --corazon5
+					if vidas_p2 >= 3 then 
+						RojoM		<=  Corazon(29 downto 20);	
+						VerdeM	<=  Corazon(19 downto 10); 
+						AzulM		<=  Corazon(9 downto 0);
+					else
+						RojoM		<=  Corazon_N(29 downto 20);	
+						VerdeM	<=  Corazon_N(19 downto 10); 
+						AzulM		<=  Corazon_N(9 downto 0);
+					end if;
+				elsif graficar_digito(min, cntH, cntV, 431, 55) then --minuto 
+					RojoM <= (others => '0');
+					VerdeM <= (others => '0');
+					AzulM <= (others => '0');
+				elsif graficar_digito(seg_d, cntH, cntV, 461, 55) then --segundo decada
+					RojoM <= (others => '0');
+					VerdeM <= (others => '0');
+					AzulM <= (others => '0');
+				elsif graficar_digito(seg_u, cntH, cntV, 483, 55) then  --segundo unidad
+					RojoM <= (others => '0');
+					VerdeM <= (others => '0');
+					AzulM <= (others => '0');
+				elsif ((cntH >= 452) and (cntH < 452 + 4)) and ((cntV >= 58) and (cntV < 58 + 4)) then--dos puntos del reloj,el de arriba
+					RojoM <= (others => '0');
+					VerdeM <= (others => '0');
+					AzulM <= (others => '0');
+				elsif ((cntH >= 452) and (cntH < 452 + 4)) and ((cntV >= 73) and (cntV < 73 + 4)) then --dos puntos del reloj,el de abajo
+					RojoM <= (others => '0');
+					VerdeM <= (others => '0');
+					AzulM <= (others => '0');
+				elsif vidas_p2 = 0 then		--gana player 1, el de la isq																						
+					if ((cntH >=39+144 ) and (cntH < 39+144 +44 )) and ((cntV >= 202+35) and  (cntV < 202+35 +60) ) then  -- trofeo isq
+						RojoM		<=  Trofeo(29 downto 20);	
+						VerdeM	<=  Trofeo(19 downto 10); 
+						AzulM		<=  Trofeo(9 downto 0);
+					elsif ((cntH >= 7+144) and (cntH < 7+144 +110 )) and ((cntV >= 263+35) and  (cntV < 263+35 +13) ) then  -- winner isq
+						RojoM		<=  Winner(29 downto 20);	
+						VerdeM	<=  Winner(19 downto 10); 
+						AzulM		<=  Winner(9 downto 0);
+					elsif ((cntH >= 528+144 ) and (cntH < 528+144 +100 )) and ((cntV >= 265+35) and  (cntV < 265+35 +20) ) then  -- loser der
+						RojoM		<=  Loser(29 downto 20);	
+						VerdeM	<=  Loser(19 downto 10); 
+						AzulM		<=  Loser(9 downto 0);
+					elsif ((cntH >= 562+144) and (cntH < 562+144 +32 )) and ((cntV >= 195+35) and  (cntV < 195+35 +69) ) then  -- calaveera der
+						RojoM		<=  Calavera(29 downto 20);	
+						VerdeM	<=  Calavera(19 downto 10); 
+						AzulM		<=  Calavera(9 downto 0);
+					else
+						RojoM		<=  "0010100000";	--40
+						VerdeM	<=  "0111100000";	--60
+						AzulM		<=  "1111100000";	--120
+					end if;
+				elsif vidas_p1 = 0 then		--gana player 2, el de la der
+					if ((cntH >=555+144 ) and (cntH < 555+144 +44 )) and ((cntV >= 202+35) and  (cntV < 202+35 +60) ) then  -- trofeo der
+						RojoM		<=  Trofeo(29 downto 20);	
+						VerdeM	<=  Trofeo(19 downto 10); 
+						AzulM		<=  Trofeo(9 downto 0);
+					elsif ((cntH >= 523+144 ) and (cntH <  523+144 +110 )) and ((cntV >= 263+35) and  (cntV < 263+35 +13) ) then  -- winner der
+						RojoM		<=  Winner(29 downto 20);	
+						VerdeM	<=  Winner(19 downto 10); 
+						AzulM		<=  Winner(9 downto 0);
+					elsif ((cntH >=  12+144 ) and (cntH <  12+144 +100 )) and ((cntV >= 265+35) and  (cntV < 265+35 +20) ) then  -- loser isq
+						RojoM		<=  Loser(29 downto 20);
+						VerdeM	<=  Loser(19 downto 10); 
+						AzulM		<=  Loser(9 downto 0);
+					elsif ((cntH >= 46+144) and (cntH < 46+144 +32 )) and ((cntV >= 195+35) and  (cntV < 195+35 +69) ) then  -- calavera isq
+						RojoM		<=  Calavera(29 downto 20);	
+						VerdeM	<=  Calavera(19 downto 10); 
+						AzulM		<=  Calavera(9 downto 0);
+					else
+						RojoM		<=  "0010100000";	--40
+						VerdeM	<=  "0111100000";	--60
+						AzulM		<=  "1111100000";	--120
+					end if;
+				else -- fondo
+					RojoM		<=  "0010100000";	--40
+					VerdeM	<=  "0111100000";	--60
+					AzulM		<=  "1111100000";	--120
+
+				end if;
+			else
+				RojoM <= (others => '0');
+				VerdeM <= (others => '0');
+				AzulM <= (others => '0');
+			end if;
+		end process;
+	end rtl;

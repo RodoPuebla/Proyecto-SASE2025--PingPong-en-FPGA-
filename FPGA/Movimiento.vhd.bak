@@ -1,0 +1,195 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity Movimiento is
+
+	port(
+	
+		direccion 	: in std_logic_vector(3 downto 0);
+		reset			: in	std_logic;
+		enable60hz 	: in std_logic;
+	
+		start			: in std_logic;
+		
+		Pelota_x, Pelota_y   : in  integer range 0 to 800;
+		Barra1, Barra2			: in  integer range 0 to 800;
+		Vidas_player1, Vidas_player2: in integer range 0 to 3;
+		
+		Vidas_ledP1	: out	std_logic_vector(2 downto 0);
+		Vidas_ledP2 : out	std_logic_vector(2 downto 0);
+		Led_gP1		: out std_logic;
+		Led_gP2		: out std_logic;
+		Colision		: out std_logic
+	);
+
+end entity;
+
+	architecture rtl of Movimiento is
+		signal p_ejex : integer range 0 to 800 := ((144 + 783 - 16) / 2); -- para que quede centrado
+		signal p_ejey : integer range 0 to 800 := ((35 + 515 - 16) / 2);	 -- cuadrado entre 455<=H<471 y 267<=V<283
+		signal dir_ant : std_logic_vector(3 downto 0) := (others => '0');
+		
+		signal Vx,Vy : integer range 0 to 15 := 1;
+		signal diry,dirx : integer range -1 to 1 := 1;
+		signal cnt_intx,cnt_inty : integer range 1 to 4 := 1;
+		
+		constant b1_ejex : integer := 272;
+		signal b1_ejey : integer range 0 to 800 := 243;  --((35 + 515 - 64) / 2);
+		
+		constant b2_ejex : integer := 640;
+		signal b2_ejey : integer range 0 to 800 := 243;  --((35 + 515 - 64) / 2);
+		
+		signal vidas_p1  : integer range 0 to 3 := 3;
+		signal vidas_p2  : integer range 0 to 3 := 3;
+		
+		signal rst  : std_logic := '0';
+		signal esperando_start : std_logic := '0';
+		
+	begin
+		process(enable60hz,reset,rst) -- movimiento pelota
+		begin
+			if reset = '0' then
+					p_ejex <= ((144 + 783 - 16) / 2);
+					p_ejey <= ((35 + 515 - 16) / 2);
+					diry <= 1;
+					dirx <= 1;
+					cnt_intx <= 1;
+					cnt_inty <= 1;
+					Vx <= 3;
+					Vy <= 3;
+					vidas_p1 <= 3;
+					vidas_p2 <= 3;
+					esperando_start <= '1';
+					b1_ejey <= 225;  --((35 +80 + 400 - 64) / 2);
+					b2_ejey <= 225;  --((35 +80 + 400 - 64) / 2);
+					Colision <= '0';
+			elsif rst = '1' then
+					p_ejex <= ((144 + 783 - 16) / 2);
+					p_ejey <= ((35 + 515 - 16) / 2);
+					rst <= '0';
+			elsif rising_edge(enable60hz) then
+				Colision <= '0';
+				if esperando_start = '1' then
+					if start = '1' then
+						if vidas_p1 = 0 or vidas_p2 = 0 then
+							vidas_p1 <= 3;
+							vidas_p2 <= 3;
+						end if;
+						esperando_start <= '0'; -- salir del estado de pausa
+					end if;
+				else
+					if cnt_intx = 7 then
+						cnt_intx <= 3;
+						cnt_inty <= cnt_inty + 1;
+					else
+						cnt_intx <= cnt_intx + 1;
+					end if;
+					if cnt_inty = 2 then
+						cnt_inty <= 1;
+					end if;
+					
+					if p_ejex < b1_ejex   then
+						rst <= '1';
+						p_ejex <= ((144 + 783 - 16) / 2);
+						p_ejey <= ((35 + 515 - 16) / 2);
+						diry <= 1;
+						dirx <= 1;
+						cnt_intx <= 1;
+						cnt_inty <= 1;
+						esperando_start <= '1';
+						Colision <= '1';
+						if vidas_p1 > 0 then 
+							vidas_p1 <= vidas_p1 -1;
+						end if;
+						
+					elsif p_ejex + 16 > b2_ejex + 16  then
+						rst <= '1';
+						p_ejex <= ((144 + 783 - 16) / 2);
+						p_ejey <= ((35 + 515 - 16) / 2);
+						diry <= 1;
+						dirx <= -1;
+						cnt_intx <= 1;
+						cnt_inty <= 1;
+						esperando_start <= '1';
+						Colision <= '1';
+						if vidas_p2 > 0 then
+							vidas_p2 <= vidas_p2 -1;
+						end if;
+						
+					elsif (p_ejex + 16 > b1_ejex) and (p_ejex < b1_ejex + 16) and (p_ejey + 16 > b1_ejey) and (p_ejey < b1_ejey + 64) then  
+						p_ejex <= b1_ejex + 16; 
+						dirx <= 1;
+						cnt_inty <= cnt_inty + 1;
+						Vx <= cnt_intx;  
+						Vy <= cnt_inty;
+						Colision <= '1';
+					elsif (p_ejex + 16 > b2_ejex) and (p_ejex < b2_ejex + 16) and (p_ejey + 16 > b2_ejey) and (p_ejey < b2_ejey + 64) then  
+						p_ejex <= b2_ejex - 16; 
+						dirx <= -1;
+						cnt_inty <= cnt_inty + 1;
+						Vx <= cnt_intx;  
+						Vy <= cnt_inty;
+						Colision <= '1';
+					end if;
+					
+					if p_ejey <= 115 then 
+						p_ejey <= 115 ;
+						diry <= 1;
+						Colision <= '1';
+					elsif p_ejey + 16 >= 435 then
+						p_ejey <= 435 - 16;
+						diry <= -1;
+						Colision <= '1';
+					end if;
+
+
+					if dirx = 1 then
+						 p_ejex <= p_ejex + Vx;
+					else
+						 p_ejex <= p_ejex - Vx;
+					end if;
+					
+					if diry = 1 then
+						 p_ejey <= p_ejey + Vy;
+					else
+						 p_ejey <= p_ejey - Vy;
+					end if;
+				end if;
+				if direccion(0) = '1'  and b1_ejey > 115 then --ari
+					b1_ejey <= b1_ejey - 5 - 5; -- restar 10 directamente da latch XD
+				elsif direccion(1) = '1' and b1_ejey + 64 < 435 then --aba
+					b1_ejey <= b1_ejey + 5 +5 ; -- sumar 10 directamente da latch XD
+				end if;
+				
+				if direccion(2) = '1'  and b2_ejey > 115 then --ari
+					b2_ejey <= b2_ejey - 5 - 5; -- restar 10 directamente da latch XD
+				elsif direccion(3) = '1' and b2_ejey + 64 < 435 then --aba
+					b2_ejey <= b2_ejey + 5 +5 ; -- sumar 10 directamente da latch XD
+				end if;
+					
+				
+			end if;
+		end process;
+		
+		Vidas_ledP1 <=
+		 "111" when vidas_p1 = 3 else
+		 "110" when vidas_p1 = 2 else
+		 "100" when vidas_p1 = 1 else
+		 "000";
+		Vidas_ledP2 <=
+		 "111" when vidas_p2 = 3 else
+		 "110" when vidas_p2 = 2 else
+		 "100" when vidas_p2 = 1 else
+		 "000";
+		Led_gP1 <= '1' when vidas_p2 = 0 else '0';
+		Led_gP2 <= '1' when vidas_p1 = 0 else '0';
+		
+		Pelota_x <= p_ejex;
+		Pelota_y <= p_ejey;
+		Barra1	<= b1_ejey;
+		Barra2	<=	b2_ejey;	
+		Vidas_player1 <= vidas_p1;
+		Vidas_player2 <= vidas_p2;
+		
+	end rtl;

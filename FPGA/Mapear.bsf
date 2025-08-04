@@ -1,0 +1,169 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2013 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 16 16 240 352)
+	(text "Mapear" (rect 5 0 35 12)(font "Arial" ))
+	(text "inst" (rect 8 320 20 332)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "Corazon[29..0]" (rect 0 0 57 12)(font "Arial" ))
+		(text "Corazon[29..0]" (rect 21 27 78 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "Corazon_N[29..0]" (rect 0 0 70 12)(font "Arial" ))
+		(text "Corazon_N[29..0]" (rect 21 43 91 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48)(line_width 3))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "Trofeo[29..0]" (rect 0 0 51 12)(font "Arial" ))
+		(text "Trofeo[29..0]" (rect 21 59 72 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64)(line_width 3))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "Winner[29..0]" (rect 0 0 54 12)(font "Arial" ))
+		(text "Winner[29..0]" (rect 21 75 75 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 3))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "Loser[29..0]" (rect 0 0 48 12)(font "Arial" ))
+		(text "Loser[29..0]" (rect 21 91 69 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96)(line_width 3))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "Calavera[29..0]" (rect 0 0 61 12)(font "Arial" ))
+		(text "Calavera[29..0]" (rect 21 107 82 119)(font "Arial" ))
+		(line (pt 0 112)(pt 16 112)(line_width 3))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "cntH[9..0]" (rect 0 0 38 12)(font "Arial" ))
+		(text "cntH[9..0]" (rect 21 123 59 135)(font "Arial" ))
+		(line (pt 0 128)(pt 16 128)(line_width 3))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "cntV[9..0]" (rect 0 0 40 12)(font "Arial" ))
+		(text "cntV[9..0]" (rect 21 139 61 151)(font "Arial" ))
+		(line (pt 0 144)(pt 16 144)(line_width 3))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "p_ejex[9..0]" (rect 0 0 46 12)(font "Arial" ))
+		(text "p_ejex[9..0]" (rect 21 155 67 167)(font "Arial" ))
+		(line (pt 0 160)(pt 16 160)(line_width 3))
+	)
+	(port
+		(pt 0 176)
+		(input)
+		(text "p_ejey[9..0]" (rect 0 0 47 12)(font "Arial" ))
+		(text "p_ejey[9..0]" (rect 21 171 68 183)(font "Arial" ))
+		(line (pt 0 176)(pt 16 176)(line_width 3))
+	)
+	(port
+		(pt 0 192)
+		(input)
+		(text "b1_ejey[8..0]" (rect 0 0 50 12)(font "Arial" ))
+		(text "b1_ejey[8..0]" (rect 21 187 71 199)(font "Arial" ))
+		(line (pt 0 192)(pt 16 192)(line_width 3))
+	)
+	(port
+		(pt 0 208)
+		(input)
+		(text "b2_ejey[8..0]" (rect 0 0 51 12)(font "Arial" ))
+		(text "b2_ejey[8..0]" (rect 21 203 72 215)(font "Arial" ))
+		(line (pt 0 208)(pt 16 208)(line_width 3))
+	)
+	(port
+		(pt 0 224)
+		(input)
+		(text "vidas_p1[1..0]" (rect 0 0 54 12)(font "Arial" ))
+		(text "vidas_p1[1..0]" (rect 21 219 75 231)(font "Arial" ))
+		(line (pt 0 224)(pt 16 224)(line_width 3))
+	)
+	(port
+		(pt 0 240)
+		(input)
+		(text "vidas_p2[1..0]" (rect 0 0 55 12)(font "Arial" ))
+		(text "vidas_p2[1..0]" (rect 21 235 76 247)(font "Arial" ))
+		(line (pt 0 240)(pt 16 240)(line_width 3))
+	)
+	(port
+		(pt 0 256)
+		(input)
+		(text "min[3..0]" (rect 0 0 34 12)(font "Arial" ))
+		(text "min[3..0]" (rect 21 251 55 263)(font "Arial" ))
+		(line (pt 0 256)(pt 16 256)(line_width 3))
+	)
+	(port
+		(pt 0 272)
+		(input)
+		(text "seg_u[3..0]" (rect 0 0 44 12)(font "Arial" ))
+		(text "seg_u[3..0]" (rect 21 267 65 279)(font "Arial" ))
+		(line (pt 0 272)(pt 16 272)(line_width 3))
+	)
+	(port
+		(pt 0 288)
+		(input)
+		(text "seg_d[3..0]" (rect 0 0 44 12)(font "Arial" ))
+		(text "seg_d[3..0]" (rect 21 283 65 295)(font "Arial" ))
+		(line (pt 0 288)(pt 16 288)(line_width 3))
+	)
+	(port
+		(pt 224 32)
+		(output)
+		(text "RojoM[9..0]" (rect 0 0 47 12)(font "Arial" ))
+		(text "RojoM[9..0]" (rect 156 27 203 39)(font "Arial" ))
+		(line (pt 224 32)(pt 208 32)(line_width 3))
+	)
+	(port
+		(pt 224 48)
+		(output)
+		(text "VerdeM[9..0]" (rect 0 0 54 12)(font "Arial" ))
+		(text "VerdeM[9..0]" (rect 149 43 203 55)(font "Arial" ))
+		(line (pt 224 48)(pt 208 48)(line_width 3))
+	)
+	(port
+		(pt 224 64)
+		(output)
+		(text "AzulM[9..0]" (rect 0 0 46 12)(font "Arial" ))
+		(text "AzulM[9..0]" (rect 157 59 203 71)(font "Arial" ))
+		(line (pt 224 64)(pt 208 64)(line_width 3))
+	)
+	(drawing
+		(rectangle (rect 16 16 208 320)(line_width 1))
+	)
+)
