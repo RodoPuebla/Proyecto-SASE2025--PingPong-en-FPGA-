@@ -1,0 +1,4 @@
+v1
+DSP_BALANCING_IMPLEMENTATION,DSP_BLOCKS,Mapear:inst|lpm_mult:Mult0|mult_b1t:auto_generated|mac_out2,
+DSP_BALANCING_IMPLEMENTATION,DSP_BLOCKS,Mapear:inst|lpm_mult:Mult1|mult_b1t:auto_generated|mac_out2,
+PORT_SWAPPING,PORT_SWAPPING_FINISHED,Mapear:inst|lpm_mult:Mult0|mult_b1t:auto_generated|mac_mult1,
